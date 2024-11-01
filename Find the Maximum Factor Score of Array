@@ -1,0 +1,72 @@
+import java.util.ArrayList;
+import java.util.List;
+
+class Solution {
+    // Helper method to calculate GCD of two numbers
+    private long gcd(long a, long b) {
+        return b == 0 ? a : gcd(b, a % b);
+    }
+
+    // Helper method to calculate GCD of a list of numbers
+    private long gcdOfList(List<Integer> list) {
+        long result = list.get(0);
+        for (int i = 1; i < list.size(); i++) {
+            result = gcd(result, list.get(i));
+        }
+        return result;
+    }
+
+    // Helper method to calculate LCM of two numbers
+    private long lcm(long a, long b) {
+        return (a * b) / gcd(a, b);
+    }
+
+    // Helper method to calculate LCM of a list of numbers
+    private long lcmOfList(List<Integer> list) {
+        long result = list.get(0);
+        for (int i = 1; i < list.size(); i++) {
+            result = lcm(result, list.get(i));
+        }
+        return result;
+    }
+
+    public long maxScore(int[] nums) {
+        // Convert array to a list for easy element removal
+        List<Integer> numList = new ArrayList<>();
+        for (int num : nums) {
+            numList.add(num);
+        }
+
+        // Calculate GCD and LCM of the entire array
+        long gcdAll = gcdOfList(numList);
+        long lcmAll = lcmOfList(numList);
+        long maxScore = gcdAll * lcmAll;  // Initial factor score without removing any element
+
+        // Try removing each element and calculate the factor score
+        for (int i = 0; i < nums.length; i++) {
+            List<Integer> subList = new ArrayList<>(numList);
+            subList.remove(i);  // Remove the i-th element
+
+            if (subList.isEmpty()) continue;  // Skip if there's nothing left
+
+            // Calculate GCD and LCM of the sublist
+            long gcdSub = gcdOfList(subList);
+            long lcmSub = lcmOfList(subList);
+
+            // Calculate the factor score
+            long score = gcdSub * lcmSub;
+            maxScore = Math.max(maxScore, score);
+        }
+
+        return maxScore;
+    }
+}
+
+// Test the solution with the specified input
+public class Test {
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        int[] nums = {16, 25, 7, 27, 11, 13, 17, 19, 23, 29};
+        System.out.println(solution.maxScore(nums));  // Should output the correct maximum factor score
+    }
+}
