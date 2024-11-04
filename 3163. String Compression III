@@ -1,0 +1,22 @@
+class Solution {
+    public String compressedString(String word) {
+        
+        StringBuilder comp = new StringBuilder();
+        int len = word.length();
+        int i = 0;
+        
+        while (i < len)
+        {
+            char x = word.charAt(i);
+            int count = 0;
+            
+            while (i < len && word.charAt(i) == x && count < 9)
+            {
+                count++;
+                i++;
+            }
+            comp.append(count).append(x);
+        }
+            return comp.toString();
+    }
+}
