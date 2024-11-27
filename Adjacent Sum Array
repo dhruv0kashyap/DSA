@@ -1,0 +1,46 @@
+import java.util.*;
+
+public class ArrayReconstruction {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int testCaseCount = scanner.nextInt(); // Number of test cases
+        StringBuilder resultBuilder = new StringBuilder();
+
+        while (testCaseCount-- > 0) {
+            int arrayLength = scanner.nextInt(); // Length of the original array
+            int[] sumArray = new int[arrayLength - 1];
+
+            for (int i = 0; i < arrayLength - 1; i++) {
+                sumArray[i] = scanner.nextInt();
+            }
+
+            // Sort the sumArray to process the smallest sums first
+            Arrays.sort(sumArray);
+
+            // Start constructing the original array
+            int[] originalArray = new int[arrayLength];
+            originalArray[0] = 1; // Assume the first element is 1 for simplicity
+
+            boolean isValid = true;
+            for (int i = 0; i < arrayLength - 1; i++) {
+                originalArray[i + 1] = sumArray[i] - originalArray[i];
+                if (originalArray[i + 1] <= 0) {
+                    isValid = false;
+                    break;
+                }
+            }
+
+            if (isValid) {
+                for (int value : originalArray) {
+                    resultBuilder.append(value).append(" ");
+                }
+                resultBuilder.append("\n");
+            }
+        }
+
+        // Print all results for the test cases
+        System.out.print(resultBuilder.toString());
+    }
+}
