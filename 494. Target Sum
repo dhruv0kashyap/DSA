@@ -1,15 +1,31 @@
 class Solution {
+    int[] dp;
     public int findTargetSumWays(int[] nums, int target) {
-        return helper(nums, target, 0, 0);
+      
+        int sum = 0;
+        for (int num : nums) {
+            sum += num;
+        }
+        if (target > sum || target + sum < 0 || (target+sum)%2 != 0) {
+            return 0;
+        }
+        int targetSum = (target + sum)/2;
+        dp = new int[targetSum+1]; 
+        dp[0] = 1; 
+
+        countSubsets(nums, 0, targetSum);
+        return dp[targetSum];
     }
 
-    private int helper(int[] arr, int target, int idx, int sum) {
-        if (idx >= arr.length)
-            return sum == target ? 1 : 0;
+    private void countSubsets(int[] nums, int index, int targetSum) {
+        if (index == nums.length) {
+            return;
+        }
         
-        int subtract = helper(arr, target, idx + 1, sum - arr[idx]);
-        int add = helper(arr, target, idx + 1, sum + arr[idx]);
-
-        return subtract + add;
+        for (int j=targetSum; j>=nums[index]; j--) {
+            dp[j] += dp[j-nums[index]];
+        }
+        countSubsets(nums, index+1, targetSum);
     }
+
 }
