@@ -1,0 +1,32 @@
+class Solution {
+    static {
+        for (int i = 0; i < 500; i++) {
+            maxAbsoluteSum(new int[1]);
+        }
+    }
+    public static int maxAbsoluteSum(int[] nums) {
+        int bestMaxSum = Integer.MIN_VALUE;
+        int bestMinSum = Integer.MAX_VALUE;
+        int maxSum = 0;
+        int minSum = 0;
+        for (var num : nums) {
+            var nextMax = maxSum + num;
+            maxSum = nextMax >= num ? nextMax : num;
+            var nextMin = minSum + num;
+            minSum = nextMin <= num ? nextMin : num;
+            if (maxSum > bestMaxSum) {
+                bestMaxSum = maxSum;
+            }
+            if (minSum < bestMinSum) {
+                bestMinSum = minSum;
+            }
+        }
+        if (bestMaxSum < 0) {
+            bestMaxSum = -bestMaxSum;
+        }
+        if (bestMinSum < 0) {
+            bestMinSum = -bestMinSum;
+        }
+        return bestMinSum >= bestMaxSum ? bestMinSum : bestMaxSum;
+    }
+}
