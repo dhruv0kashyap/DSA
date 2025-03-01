@@ -1,0 +1,59 @@
+class Solution {
+
+    private  int[] edge, next, head;
+    int index;
+
+    void add(int u, int v) {
+        edge[index] = v;
+        next[index] = head[u];
+        head[u] = index++;
+    }
+
+    public int mostProfitablePath(int[][] edges, int bob, int[] amount) {
+
+        int n =  edges.length + 1;
+        edge = new int[n << 1];
+        next = new int[n << 1];
+        head = new int[n];
+
+        for(int i = 0; i < n; ++i)
+            head[i] = -1;
+        index = 0;
+        for (int[] e : edges) {
+            int u = e[0], v = e[1];
+            add(u, v);
+            add(v, u);
+        }
+        
+        return dfs(0, -1, bob, amount, 1)[0];
+    }
+
+    
+    private int[] dfs(int u, int pre, int bob, int[] amount, int height) {
+        
+        int result = Integer.MIN_VALUE;
+
+        int bobHeight = u == bob ? 1 : 0;
+        for (int index = head[u]; index != -1; index = next[index]) {
+                
+            int v = edge[index];            
+            if (v == pre) continue;
+
+            int[] resv = dfs(v, u, bob, amount, height + 1);
+            if (resv[1] > 0) 
+                bobHeight = resv[1] + 1;
+
+            result = Math.max(result, resv[0]);
+        }
+
+        if (bobHeight > 0 && bobHeight <= height){
+            if (bobHeight == height) 
+                amount[u] = amount[u] >> 1;
+            else
+                amount[u] = 0;
+        }
+
+        return new int[]{result == Integer.MIN_VALUE ? amount[u] : amount[u] + result, bobHeight};
+    
+    }
+}        
