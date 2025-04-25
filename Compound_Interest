@@ -1,0 +1,19 @@
+
+import java.util.*;
+class Main {
+    public static void main(String[] args) {
+      Scanner sc=new Scanner(System.in);
+      System.out.print("Enter the principle:");
+      double p=sc.nextDouble();
+      System.out.print("Enter the Interest rate:");
+      double r=sc.nextDouble()/100;
+       System.out.print("Enter the  no of times compounded per years:");
+       int t=sc.nextInt();
+        System.out.print("Enter the  no  years:");
+        
+       int n=sc.nextInt();
+      double a=p*Math.pow(1+r/t,n*t);
+      System.out.println("Compound Interest"+a);
+      
+      }
+}
