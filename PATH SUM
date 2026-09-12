@@ -1,0 +1,97 @@
+Path Sum (Leetcode 112)-------------------------------------------------
+
+class Solution {
+
+    boolean flag = false;
+
+    public boolean hasPathSum(TreeNode root, int targetSum) {
+
+        if(root == null)
+        return false;
+
+        if(root.left == null && root.right == null){
+          return targetSum == root.val;
+        }
+
+        boolean left = hasPathSum(root.left, targetSum-root.val);
+
+        boolean right = hasPathSum(root.right, targetSum-root.val);
+
+        return left || right;
+        
+    }
+}
+
+
+Path Sum II (Leetcode 113)---------------------------------------------
+
+
+class Solution {
+
+    List<List<Integer>> ans = new ArrayList<>();
+    List<Integer> temp = new ArrayList<>();
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+
+        solve(root, targetSum); 
+        
+        return ans;
+    }
+
+    public void solve(TreeNode root, int targetSum) {
+      
+        if(root == null)
+        return;
+
+        temp.add(root.val);
+
+        if(root.left == null && root.right == null)
+          if(root.val == targetSum){
+            ans.add(new ArrayList<>(temp));
+          }
+
+
+        solve(root.left, targetSum-root.val);
+        solve(root.right, targetSum-root.val);
+
+        temp.remove(temp.size()-1);
+        return;
+
+    }
+
+}
+
+
+Path Sum III (Leetcode 437)----------------------------------------------
+
+
+class Solution {
+    public int pathSum(TreeNode root, int targetSum) {
+
+        if(root == null)
+        return 0;
+
+        int count = dfs(root, targetSum);
+
+        count += pathSum(root.left, targetSum);
+        count += pathSum(root.right, targetSum);
+
+        return count;        
+    }
+
+    public int dfs(TreeNode root, long targetSum){
+
+        if(root == null)
+          return 0;
+        
+        int count = 0;
+
+        if(root.val == targetSum)
+          count++;
+
+        count += dfs(root.left, targetSum-root.val);
+        count += dfs(root.right, targetSum-root.val);
+
+        return count; 
+    }
+}
