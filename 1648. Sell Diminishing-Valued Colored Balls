@@ -1,0 +1,58 @@
+class Solution {
+    public int maxProfit(int[] inventory, int orders) {
+
+        Arrays.sort(inventory);
+
+        long ans = 0; 
+        int mod = 1000000007;
+
+        int n = inventory.length;
+
+        for (int i = n - 1; i >= 0 && orders > 0; ) {
+
+            int current = inventory[i];
+
+            int next = (i > 0) ? inventory[i - 1] : 0;
+
+            int count = n - i;
+
+            long balls = (long) (current - next) * count;
+
+            if (balls <= orders) {
+
+                // Sell all levels from current down to next + 1
+                long sum = (long) (current + next + 1) * (current - next) / 2;
+
+                ans += sum * count;
+                ans %= mod;
+
+                orders -= balls;
+
+                i--;
+
+            } else {
+
+                // We cannot finish this entire level
+
+                long fullLevels = orders / count;
+                long remainder = orders % count;
+
+                long low = current - fullLevels;
+
+                // Sell full levels
+                long sum = (long) (current + low + 1) * fullLevels / 2;
+
+                ans += sum * count;
+
+                // Sell remaining balls at value 'low'
+                ans += remainder * low;
+
+                ans %= mod;
+
+                orders = 0;
+            }
+        }
+
+        return (int) ans;
+    }
+}
