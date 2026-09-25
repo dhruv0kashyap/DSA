@@ -1,0 +1,160 @@
+Recursion-----------------------------------------------------------------------------------------------------------------------------------
+class Solution {
+    public int lengthOfLIS(int[] nums) {
+
+        int n = nums.length;
+        int i = 0;
+
+        int prev = -1;
+
+        return solve(nums, n, i, prev);
+
+    }
+
+    public int solve(int[] nums, int n, int i, int prev){
+
+        if(i == n)
+        return 0;
+        
+        if(prev == -1 || nums[i] > nums[prev]){
+            return Math.max( 1+solve(nums, n, i+1, i), solve(nums, n, i+1, prev) );
+        }
+        
+        return solve(nums, n, i+1, prev);
+
+    }
+}
+Memorization-----------------------------------------------------------------------------------------------------------------------------------
+
+class Solution {
+    public int lengthOfLIS(int[] nums) {
+
+        int n = nums.length;
+        int i = 0;
+
+        int prev = -1;
+
+        int[][] dp = new int[n][n + 1];
+
+        for(int x = 0; x < n; x++){
+            Arrays.fill(dp[x], -1);
+        }
+
+        return solve(nums, n, i, prev, dp);
+
+    }
+
+    public int solve(int[] nums, int n, int i, int prev, int[][] dp){
+
+        if(i == n)
+            return 0;
+
+        if(dp[i][prev + 1] != -1)
+            return dp[i][prev + 1];
+        
+        if(prev == -1 || nums[i] > nums[prev]){
+            
+            int c1 = 1 + solve(nums, n, i+1, i, dp);
+
+            int c2 = solve(nums, n, i+1, prev, dp);
+
+            return dp[i][prev + 1] = Math.max(c1, c2);
+        }
+        
+        return dp[i][prev + 1] = solve(nums, n, i+1, prev, dp);
+    }
+}
+Tabulatio 2D DP-----------------------------------------------------------------------------------------------------------------------------------
+class Solution {
+    public int lengthOfLIS(int[] nums) {
+
+        int n = nums.length;
+
+        int[][] dp = new int[n + 1][n + 1];
+
+        for(int i = n - 1; i >= 0; i--) {
+
+            for(int prev = -1; prev < i; prev++) {
+
+                if(prev == -1 || nums[i] > nums[prev]) {
+
+                    int c1 = 1 + dp[i + 1][i + 1];
+
+                    int c2 = dp[i + 1][prev + 1];
+
+                    dp[i][prev + 1] = Math.max(c1, c2);
+                }
+                else {
+
+                    dp[i][prev + 1] = dp[i + 1][prev + 1];
+                }
+            }
+        }
+
+        return dp[0][0];
+    }
+}
+Tabulation 1D DP-----------------------------------------------------------------------------------------------------------------------------------
+class Solution {
+    public int lengthOfLIS(int[] nums) {
+
+        int n = nums.length;
+
+        int[] dp = new int[n];
+        int ans = 1;
+
+        for(int i = 0; i < n; i++){
+            
+            dp[i] = 1;
+
+            for(int j = 0; j < i; j++){
+
+                if(nums[j] < nums[i]){
+
+                    dp[i] = Math.max(dp[i], 1 + dp[j]);
+
+                }
+            }
+            ans  = Math.max(ans, dp[i]);
+        }
+        return ans;        
+    }
+}
+Tabulation Binary Search Most Optimised----------------------------------------------------------------------------------------------------------------------
+
+class Solution {
+    public int lengthOfLIS(int[] nums) {
+
+        int n = nums.length;
+
+        int[] dp = new int[n];
+
+        int len = 0;
+
+        for(int i = 0; i < n; i++) {
+
+            int left = 0;
+            int right = len;
+
+            while(left < right) {
+
+                int mid = left + (right - left) / 2;
+
+                if(dp[mid] < nums[i]) {
+                    left = mid + 1;
+                }
+                else {
+                    right = mid;
+                }
+            }
+
+            dp[left] = nums[i];
+
+            if(left == len) {
+                len++;
+            }
+        }
+
+        return len;
+    }
+}
